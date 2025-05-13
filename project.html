@@ -35,8 +35,13 @@
 <body>
     <div class="container">
         <div class="container-content">
-            <div class="text">Press button to play game</div>
-            <button onclick="playGame()"> Play game </button>
+            <div class="text">Choose among these options</div>
+            <div class="button-container">
+                <button id="rock">Rock</button>
+                <button id="paper">Paper</button>
+                <button id="scissors">Scissors</button>
+            </div>
+            <div class="roundPara"></div>
             <div class="resultPara"></div>
         </div>
     </div>
@@ -46,6 +51,19 @@
         let humanScore = 0;
         let computerScore = 0;
         const resultPara = document.querySelector(".resultPara");
+        const roundPara = document.querySelector(".roundPara")
+        const rock = document.querySelector("#rock");
+        const paper = document.querySelector("#paper");
+        const scissors = document.querySelector("#scissors");
+        const options = document.querySelector("#button-container");
+        const computerSelection = getComputerChoice();
+    
+
+        rock.addEventListener("click", () => playGame("rock"));
+        paper.addEventListener("click", () => playGame("paper"));
+        scissors.addEventListener("click", () => playGame("scissors"));
+
+        
 
         function getComputerChoice() { 
         const randomNumber = Math.floor(Math.random() * 3);
@@ -58,59 +76,70 @@
         else if (randomNumber === 2) {
             return "scissors";
         }
-        return randomNumeber;
+        return randomNumber;
         }
 
-        function getHumanChoice() {
-        const choice = prompt ("Choose paper, rock or scissors","Rock,Paper,Scissors");
-        return choice;
-        }
 
-        function playGame() {
-        function playRound(humanChoice, computerChoice) {
-        if (humanChoice === computerChoice) {
-            console.log("It's a tie!");
-            resultPara.textContent = "It's a tie!";
-            resultPara.style.backgroundColor = "yellow";
-        } 
-        else if (
-            (humanChoice === "rock" && computerChoice === "scissors") ||
-            (humanChoice === "paper" && computerChoice === "rock") ||
-            (humanChoice === "scissors" && computerChoice === "paper")
-        ) {
-            humanScore++; // human wins
-            console.log(`You win! ${capitalize(humanChoice)} beats ${capitalize(computerChoice)}.`);
-            resultPara.textContent = `You win! ${capitalize(humanChoice)} beats ${capitalize(computerChoice)}.`;
-            resultPara.style.backgroundColor = "green";
-        } 
-        else {
-            computerScore++; // computer wins
-            console.log(`You lose! ${capitalize(computerChoice)} beats ${capitalize(humanChoice)}.`);
-            resultPara.textContent = `You lose! ${capitalize(computerChoice)} beats ${capitalize(humanChoice)}.`;
-            resultPara.style.backgroundColor = "red";
-        }
-        console.log ("Your score: ", humanScore);
-        console.log ("Computer score: ", computerScore);
-        resultPara.textContent = "Your score: ", humanScore;
-        resultPara.textContent = "Computer score: ", computerScore;
-        function capitalize(word) {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-        }
-        }
+        function playGame(humanChoice) {
+            const computerChoice = getComputerChoice();
+            playRound(humanChoice, computerChoice);
 
-        const humanSelection = getHumanChoice();
-        const computerSelection = getComputerChoice();
-        
-        for (let i = 0; i < 5; i++) {
-        const humanChoice = getHumanChoice();      // get a NEW choice each time
-        const computerChoice = getComputerChoice(); // get a NEW choice each time
-        playRound(humanChoice, computerChoice);
-        }
-        console.log(`Final Score — You: ${humanScore}, Computer: ${computerScore}`);
-        resultPara.textContent = `Final Score — You: ${humanScore}, Computer: ${computerScore}`;
-        }
-        
-        
+            function playRound(humanChoice, computerChoice) {
+            if (humanChoice === computerChoice) {
+                console.log("It's a tie!");
+                resultPara.textContent = "It's a tie!";
+                resultPara.style.backgroundColor = "lightyellow";
+            } 
+            else if (
+                (humanChoice === "rock" && computerChoice === "scissors") ||
+                (humanChoice === "paper" && computerChoice === "rock") ||
+                (humanChoice === "scissors" && computerChoice === "paper")
+            ) {
+                humanScore++; // human wins
+                console.log(`You win! ${capitalize(humanChoice)} beats ${capitalize(computerChoice)}.`);
+                resultPara.textContent = `You win! ${capitalize(humanChoice)} beats ${capitalize(computerChoice)}.`;
+                resultPara.style.backgroundColor = "lightgreen";
+            } 
+            else {
+                computerScore++; // computer wins
+                console.log(`You lose! ${capitalize(computerChoice)} beats ${capitalize(humanChoice)}.`);
+                resultPara.textContent = `You lose! ${capitalize(computerChoice)} beats ${capitalize(humanChoice)}.`;
+                resultPara.style.backgroundColor = "lightred";
+            }
+            roundPara.textContent = `\nYour score: ${humanScore} | Computer score: ${computerScore}`;
+            
+            if (humanScore === 5 || computerScore === 5) {
+                const winner = humanScore === 5 ? "You" : "Computer";
+                resultPara.textContent += `\n${winner} won the game!`;
+
+                const button = document.createElement("button");
+                button.textContent = "Restart game";
+                button.style.padding = "10px";
+                button.style.margin = "10px";
+                button.addEventListener ("click", () => {
+                    humanScore = 0;
+                    computerScore = 0;
+                    resultPara.textContent = "";
+                    roundPara.textContent = "";
+                    button.remove();
+
+                    rock.style.display = "inline-block";
+                    paper.style.display = "inline-block";
+                    scissors.style.display = "inline-block";
+                     
+                })
+                document.querySelector(".container-content").appendChild(button);
+                rock.style.display = "none";
+                paper.style.display = "none";
+                scissors.style.display = "none";
+            }
+
+            }
+
+            function capitalize(word) {
+            return word.charAt(0).toUpperCase() + word.slice(1);
+            }
+        };     
     </script>
     
 
